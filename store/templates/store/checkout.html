@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+    <h1 style="font-size: 2rem; margin-bottom: 1.5rem;" class="text-2xl">CHECKOUT</h1>
+    <h2 class="text-xl text-gray-500">Total Cost: Rs. {{cart.get_total_cost}}</h2>
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button style="display: inline-block; padding: 1rem 2rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none;">Checkout</button>
+
+    </form>
+
+      {% endblock %}

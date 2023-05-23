@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Order Details - {{ order.id }}{% endblock %}
+
+{% block content %}
+<style>
+    .order-header {
+        display: flex;
+        background-color: #48BB78;
+        padding: 10px;
+        color: #fff;
+    }
+
+    .order-header-item {
+        flex: 1;
+    }
+
+    .order-item {
+        display: flex;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .order-item-field {
+        flex: 1;
+    }
+
+    .text-xl {
+        font-size: 1.5rem;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.5rem;
+    }
+
+    .text-2xl {
+        font-size: 2rem;
+    }
+</style>
+
+<h1 class="mb-6 text-2xl">Order Details - {{ order.id }}</h1>
+<h2 class="text-xl">My Products in this Order:</h2>
+<div class="order-header">
+    <div class="order-header-item">
+        <strong>Title</strong>
+    </div>
+    <div class="order-header-item">
+        <strong>Quantity</strong>
+    </div>
+    <div class="order-header-item">
+        <strong>Price</strong>
+    </div>
+    <div class="order-header-item">
+        <strong>Ordered By</strong>
+    </div>
+    <div class="order-header-item">
+        <strong>Address</strong>
+    </div>
+    <div class="order-header-item">
+        <strong>Created Date</strong>
+    </div>
+</div>
+{% for item in order.items.all %}
+    <div class="order-item">
+        <div class="order-item-field">
+            <strong>{{ item.product.title }}</strong>
+        </div>
+        <div class="order-item-field">
+            <strong>{{ item.quantity }}</strong>
+        </div>
+        <div class="order-item-field">
+            <strong>Rs. {{ item.price }}</strong>
+        </div>
+        <div class="order-item-field">
+            <strong>{{ order.first_name }} {{ order.last_name }}</strong>
+        </div>
+        <div class="order-item-field">
+            <strong>{{ order.address }}</strong>
+        </div>
+        <div class="order-item-field">
+            <strong>{{ order.created_at }}</strong>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

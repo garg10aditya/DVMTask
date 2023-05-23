@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+    <div style="text-align: center;">
+        <h1 style="font-size: 2rem; margin-bottom: 1.5rem;" class="text-2xl">CART</h1>
+        <a href="{% url 'clear_cart' %}" style="display: inline-block; padding: 1rem 2rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none;">Clear Cart</a>
+
+        {% if cart|length %}
+        {% for item in cart %}
+        <div style="display:flex; justify-content: center;">
+            <img src = "{{item.product.get_thumbnail}}" class="w-50">
+        </div>
+            <p>
+                <b style="margin-bottom: 0.5rem;" class="mb-2">Title: </b>{{ item.product.title }}<br>
+                <b>Price: </b>Rs. {{item.product.price }}</br>
+                <b>Quantity: </b>{{ item.quantity }}</br>
+                <a href="{% url 'change_quantity' item.product.id %}?action=increase" style="display: inline-block; padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; margin-right: 0.5rem;">Increase +</a>
+                <a href="{% url 'change_quantity' item.product.id %}?action=decrease" style="display: inline-block; padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; margin-right: 0.5rem;">Decrease -</a>
+                <a href="{% url 'remove_from_cart' item.product.id %}" style="display: inline-block; padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none;">Remove from Cart</a>
+                <br></br>
+                <a href="{% url 'checkout' %}" style="display: inline-block; padding: 1rem 2rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none;">CHECKOUT</a>
+                <a href="{% url 'clear_cart' %}" style="display: inline-block; padding: 1rem 2rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none;">Clear Cart</a>
+
+            </p>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <script>
+                // Remove messages after 5 seconds (5000 milliseconds)
+                setTimeout(function() {
+                    document.querySelectorAll('.messages li').forEach(function(element) {
+                        element.style.display = 'none';
+                    });
+                }, 3000);
+            </script>
+        {% endif %}
+        {% endfor %}
+        <strong style="margin-top: 1.5rem; display: block;">Total cost: </strong>Rs. {{ cart.get_total_cost }}
+    </div>
+        {% else %}
+        <div class="px-6 py-6 bg-gray-300">You don't have any products in the cart yet! </div>
+    {% endif %}
+{% endblock %}

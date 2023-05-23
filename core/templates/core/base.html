@@ -1,0 +1,79 @@
+{% load menu %}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | BITShop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+<nav style="max-width: 100vw; background-color: #48BB78;" class="max-w-4xl mx-auto py-4 px-6 flex items-center justify-between">
+    <div class="logo">
+        <a href="/" style="font-size: 1.5rem; color: #fff; text-decoration: none;">BITShop</a>
+    </div>
+
+    <div class="search">
+        <form method="get" action="/search/" class="flex items-center space-x-4">
+            <input type="search" name="query" placeholder="Search..." style="padding: 0.5rem 1rem; border-radius: 0.5rem;">
+            <button style="background-color: #fff; border: none; padding: 0.5rem; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 1.5rem; height: 1.5rem; color: #48BB78;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <div class="menu flex items-center space-x-4">
+        {% menu %}
+        {% if not request.user.userprofile.is_vendor %}
+            <a href="{% url 'cart_view' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                </svg> ({{cart|length}})
+            </a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'myaccount' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">My account</a>
+            {% if request.user.userprofile.is_vendor %}
+                <a href="{% url 'my_store' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">My store</a>
+            {% endif %}
+        {% endif %}
+
+        {% if not request.user.is_authenticated %}
+            <a href="{% url 'login' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">Login</a>
+            <a href="{% url 'signup' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">Sign Up</a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            {% if not request.user.userprofile.is_vendor %}
+                <p class="text-white">Balance: Rs. {{ request.user.userprofile.balance }}</p>
+                <a href="{% url 'past_orders' %}" class="text-white">Past Orders</a>
+            {% endif %}
+        {% endif %}
+        {% if request.user.is_authenticated %}
+            {% if request.user.userprofile.is_vendor %}
+        <a href="{% url 'sales_report' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">Sales Report</a>
+    {% endif %}
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+        {% if not request.user.userprofile.is_vendor %}
+
+            <a href="{% url 'wishlist' %}" style="padding: 0.5rem 1rem; background-color: #48BB78; color: #fff; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.3s ease-in-out;" class="hover:bg-teal-900">Wishlist</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</nav>
+
+<div style="max-width: 100vw; padding: 1rem;" class="max-w-4xl mx-auto">
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+</body>
+</html>

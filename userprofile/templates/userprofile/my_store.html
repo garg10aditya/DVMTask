@@ -1,0 +1,184 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Store{% endblock %}
+
+{% block content %}
+<style>
+        .message {
+      margin-top: 1rem;
+      padding: 1rem 2rem;
+      background-color: #48BB78;
+      color: #fff;
+    }
+
+    .order-header {
+      display: flex;
+      background-color: #48BB78;
+      padding: 1rem;
+      color: #fff;
+    }
+
+    .order-header-item {
+      flex: 1;
+    }
+
+    .order-item {
+      display: flex;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .order-item-field {
+      flex: 1;
+    }
+
+    .text-xl {
+      font-size: 1.5rem;
+    }
+
+    .text-2xl {
+      font-size: 2rem;
+    }
+
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .product {
+      width: 33.33%;
+      padding: 0.5rem;
+    }
+
+    .product-content {
+      padding: 1rem;
+      background-color: #F7FAFC;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: auto;
+    }
+
+    .product-title {
+      font-size: 1.25rem;
+    }
+
+    .product-price {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .product-divider {
+      margin: 1rem 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+
+    .no-products {
+      margin-top: 1rem;
+      padding: 1rem 2rem;
+      background-color: #eee;
+    }
+
+</style>
+    <h1 class="text-2xl">My Store</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message mt-4 px-8 py-4 bg-teal-200 text-teal-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <hr>
+
+    <h2 class="mt-6 text-xl">My Orders</h2>
+    <div class="order-header">
+        <div class="order-header-item">
+            <strong>ORDER ID</strong>
+        </div>
+        <div class="order-header-item">
+            <strong>Title</strong>
+        </div>
+        <div class="order-header-item">
+            <strong>Quantity</strong>
+        </div>
+        <div class="order-header-item">
+            <strong>Price</strong>
+        </div>
+    </div>
+
+   {% for order_item in order_items|dictsortreversed:'order.id' %}
+        {% if forloop.counter <= 10 %} <!-- Show only the first 10 orders -->
+            <div class="flex flex-wrap order-item">
+                <div class="w-1/4">
+                   <a href="{% url 'my_store_order_detail' order_item.order.id %}"><strong>{{ order_item.order.id }}</strong></a>
+                </div>
+                <div class="w-1/4">
+                    <strong>{{ order_item.product.title }}</strong>
+                </div>
+                <div class="w-1/4">
+                    <strong>{{ order_item.quantity }}</strong>
+                </div>
+                <div class="w-1/4">
+                    <strong>Rs. {{ order_item.price }}</strong>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if order_items|length > 10 %} <!-- Show the "See More" button if there are more than 10 orders -->
+        <button id="see-more-button" class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded">See More</button>
+    {% endif %}
+
+
+    <hr>
+
+    <a href="{% url 'add_product' %}" class="mt-6 inline-block py-4 px-8 bg-teal-500 text-white">Add Product</a>
+
+    <h2 class="mt-6 text-xl">My Products</h2>
+
+    {% if products %}
+        <div class="products">
+            {% for product in products %}
+                <div class="product">
+                    <div class="product-content">
+                        <a href="{% url 'edit_product' product.id %}">
+                            {% if product.image %}
+                                <div class="product-image">
+                                    <img src="{{ product.image.url }}" alt="Image of {{ product.title }}">
+                                </div>
+                            {% endif %}
+
+                            <h2 class="product-title">{{ product.title }}</h2>
+                            <p class="product-price">Rs.{{ product.price }}</p>
+
+                            <hr class="product-divider">
+
+                            <p class="product-status"><strong>Status: </strong>{{ product.get_status_display }}</p>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-products">You don't have any products yet...</p>
+    {% endif %}
+<script>
+        var orderItems = document.getElementsByClassName("order-item");
+        var seeMoreButton = document.getElementById("see-more-button");
+
+        seeMoreButton.addEventListener("click", function() {
+            for (var i = 10; i < orderItems.length; i++) {
+                orderItems[i].style.display = "flex";
+            }
+            seeMoreButton.style.display = "none";
+        });
+
+        // Hide orders after the 10th one initially
+        for (var i = 10; i < orderItems.length; i++) {
+            orderItems[i].style.display = "none";
+        }
+    </script>
+{% endblock %}

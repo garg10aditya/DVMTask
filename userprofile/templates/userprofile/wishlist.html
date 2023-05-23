@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+    .wishlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wishlist-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.product-details {
+  margin-left: 10px;
+}
+
+.product-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.product-price {
+  margin: 0;
+  color: #888;
+}
+
+.remove-link {
+  color: #f00;
+  text-decoration: none;
+}
+
+</style>
+  <h1>My Wishlist</h1>
+
+  {% if wishlist_items %}
+    <ul class="wishlist">
+      {% for wishlist_item in wishlist_items %}
+        <li class="wishlist-item">
+          <div class="product-image">
+            <a href="{% url 'product_detail' category_slug=wishlist_item.product.category.slug slug=wishlist_item.product.slug %}">
+              <img src="{{ wishlist_item.product.get_thumbnail }}" alt="{{ wishlist_item.product.title }}">
+            </a>
+          </div>
+          <div class="product-details">
+            <h2 class="product-title">
+              <a href="{% url 'product_detail' category_slug=wishlist_item.product.category.slug slug=wishlist_item.product.slug %}">
+                {{ wishlist_item.product.title }}
+              </a>
+            </h2>
+            <p class="product-price">Price: Rs. {{ wishlist_item.product.price }}</p>
+            <a href="{% url 'remove_from_wishlist' wishlist_item.product.id %}" class="remove-link">Remove</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Your wishlist is empty.</p>
+  {% endif %}
+{% endblock %}

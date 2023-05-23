@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Order Success{% endblock %}
+
+{% block content %}
+    <h1>Order Success</h1>
+    <p>Your order with ID {{ order.id }} has been placed successfully.</p>
+    <p>Order Details:</p>
+    <ul>
+        {% for item in order.orderitem_set.all %}
+            <li>{{ item.product.title }} - {{ item.quantity }} x {{ item.price }}</li>
+        {% endfor %}
+    </ul>
+    <p>Total Cost: {{ order.total_cost }}</p>
+{% endblock %}
